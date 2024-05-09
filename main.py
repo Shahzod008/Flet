@@ -3,10 +3,6 @@ import sqlite3
 
 
 def main(page: Page):
-    page.window_width = 400
-    page.window_min_width = page.window_width
-    page.window_height = 700
-    page.window_min_height = page.window_height
     page.bgcolor = "black"
 
     def shorts_rils_page(e):
@@ -18,7 +14,7 @@ def main(page: Page):
     def show_settings_page(e):
         page.clean()
         page.navigation_bar = nav_main_search_profile_new_post
-        page.appbar = settings_page_appbar
+        appbar("Настройка")
         page.update()
 
     def new_post_page(e):
@@ -35,12 +31,12 @@ def main(page: Page):
 
     def show_chat_page(e):
         page.clean()
-        page.appbar = chat_page_appbar
+        appbar("Юзер наме")
         page.update()
 
     def show_notification_page(e):
         page.clean()
-        page.appbar = notification_page_appbar
+        appbar("Уведомления")
         page.navigation_bar = None
         page.add(Text("чат"))
         page.update()
@@ -61,14 +57,14 @@ def main(page: Page):
 
     def reg_auth():
         page.clean()
-        page.add(panel_reg)
+        reg_auth_panel(text="Регистрация", btn_reg_auth=btn_reg)
         page.navigation_bar = nav_reg_auth
         page.vertical_alignment = MainAxisAlignment.CENTER
         page.horizontal_alignment = MainAxisAlignment.CENTER
         page.update()
 
     def register(e):
-        conn = sqlite3.connect("basa.db")
+        conn = sqlite3.connect("../basa.db")
         cur = conn.cursor()
         cur.execute("CREATE TABLE IF NOT EXISTS users ("
                     "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -88,7 +84,7 @@ def main(page: Page):
         conn.close()
 
     def auth(e):
-        conn = sqlite3.connect('basa.db')
+        conn = sqlite3.connect('../basa.db')
         cur = conn.cursor()
         cur.execute("SELECT * FROM users WHERE username=? AND password=?",
                     (user_name.value, user_password.value))
@@ -110,12 +106,12 @@ def main(page: Page):
         if index == 0:
             user_name.value = ""
             user_password.value = ""
-            page.add(panel_reg)
+            reg_auth_panel(text="Регистрация", btn_reg_auth=btn_reg)
             page.update()
         elif index == 1:
             user_name.value = ""
             user_password.value = ""
-            page.add(panel_aut)
+            reg_auth_panel(text="Авторизация", btn_reg_auth=btn_auth)
             page.update()
         page.update()
 
@@ -151,7 +147,7 @@ def main(page: Page):
         page.update()
 
     def fetch_users(search_name):
-        conn = sqlite3.connect('basa.db')
+        conn = sqlite3.connect('../basa.db')
         cursor = conn.cursor()
         cursor.execute("SELECT username FROM users WHERE username LIKE ?", ('%' + search_name + '%',))
         rows = cursor.fetchall()
@@ -213,7 +209,7 @@ def main(page: Page):
     )
 
     btn_auth = ElevatedButton(
-        text="Войти",
+        text="Авторизироваться",
         on_click=auth,
         disabled=True,
         color="black",
@@ -223,41 +219,24 @@ def main(page: Page):
         style=ButtonStyle(shape=RoundedRectangleBorder(radius=10))
     )
 
-    panel_reg = Row(
-        controls=[
-            Column(
+    def reg_auth_panel(text, btn_reg_auth):
+        page.add(
+            Row(
                 controls=[
-                    Text(
-                        value="Регистрация",
-                        size=20,
-                    ),
-                    user_name,
-                    user_password,
-                    btn_reg,
+                    Column(
+                        controls=[
+                            Text(
+                                value=text,
+                                size=20,
+                            ),
+                            user_name,
+                            user_password,
+                            btn_reg_auth,
+                        ],
+                        horizontal_alignment=CrossAxisAlignment.CENTER, spacing=20
+                    )
                 ],
-                horizontal_alignment=CrossAxisAlignment.CENTER, spacing=20
-            )
-        ],
-        alignment=MainAxisAlignment.CENTER)
-
-    panel_aut = Row(
-        controls=[
-            Column(
-                controls=[
-                    Text(
-                        value="Войти",
-                        size=20,
-                    ),
-                    user_name,
-                    user_password,
-                    btn_auth
-                ],
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                spacing=20
-            )
-        ],
-        alignment=MainAxisAlignment.CENTER
-    )
+                alignment=MainAxisAlignment.CENTER))
 
     nav_reg_auth = NavigationBar(
         destinations=[
@@ -363,53 +342,22 @@ def main(page: Page):
             color="white"
         )
 
-    chat_page_appbar = AppBar(
-        leading=Container(
-            Row([
-                IconButton(
-                    icons.ARROW_BACK_IOS,
-                    on_click=show_main_page
-                ),
-                Text(
-                    value="user_name",
-                )
-            ], spacing=-4)
-        ),
-        bgcolor=colors.BLACK,
-        color="white"
-    )
-
-    notification_page_appbar = AppBar(
-        leading=Container(
-            Row([
-                IconButton(
-                    icons.ARROW_BACK_IOS,
-                    on_click=show_main_page
-                ),
-                Text(
-                    value="Уведомления",
-                )
-            ], spacing=-4)
-        ),
-        bgcolor=colors.BLACK,
-        color="white"
-    )
-
-    settings_page_appbar = AppBar(
-        leading=Container(
-            Row([
-                IconButton(
-                    icons.ARROW_BACK_IOS,
-                    on_click=show_profile_page
-                ),
-                Text(
-                    value="Настройки",
-                )
-            ], spacing=-4)
-        ),
-        bgcolor=colors.BLACK,
-        color="white"
-    )
+    def appbar(text):
+        page.appbar = AppBar(
+            leading=Container(
+                Row([
+                    IconButton(
+                        icons.ARROW_BACK_IOS,
+                        on_click=show_profile_page
+                    ),
+                    Text(
+                        value=text,
+                    )
+                ], spacing=-4)
+            ),
+            bgcolor=colors.BLACK,
+            color="white"
+        )
 
     reg_auth()
 
