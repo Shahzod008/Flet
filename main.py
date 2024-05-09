@@ -1,7 +1,7 @@
 from flet import (Page, Column, Row, Container, TextButton, ElevatedButton, colors, Text, MainAxisAlignment,
                   ButtonStyle, icons, SnackBar, MaterialState, RoundedRectangleBorder, IconButton, CrossAxisAlignment,
                   AppBar, TextField, NavigationBar, NavigationDestination, alignment, ListView, CircleAvatar, app)
-import sqlite3
+from sqlite3 import connect
 
 
 def main(page: Page):
@@ -66,7 +66,7 @@ def main(page: Page):
         page.update()
 
     def register(e):
-        conn = sqlite3.connect("../basa.db")
+        conn = connect("basa.db")
         cur = conn.cursor()
         cur.execute("CREATE TABLE IF NOT EXISTS users ("
                     "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -86,7 +86,7 @@ def main(page: Page):
         conn.close()
 
     def auth(e):
-        conn = sqlite3.connect('../basa.db')
+        conn = connect('basa.db')
         cur = conn.cursor()
         cur.execute("SELECT * FROM users WHERE username=? AND password=?",
                     (user_name.value, user_password.value))
@@ -149,7 +149,7 @@ def main(page: Page):
         page.update()
 
     def fetch_users(search_name):
-        conn = sqlite3.connect('../basa.db')
+        conn = connect('basa.db')
         cursor = conn.cursor()
         cursor.execute("SELECT username FROM users WHERE username LIKE ?", ('%' + search_name + '%',))
         rows = cursor.fetchall()
