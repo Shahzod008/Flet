@@ -1,4 +1,6 @@
-from flet import *
+from flet import (Page, Column, Row, Container, TextButton, ElevatedButton, colors, Text, MainAxisAlignment,
+                  ButtonStyle, icons, SnackBar, MaterialState, RoundedRectangleBorder, IconButton, CrossAxisAlignment,
+                  AppBar, TextField, NavigationBar, NavigationDestination, alignment, ListView, CircleAvatar, app)
 import sqlite3
 
 
@@ -11,16 +13,16 @@ def main(page: Page):
         page.appbar = None
         page.update()
 
-    def show_settings_page(e):
-        page.clean()
-        page.navigation_bar = nav_main_search_profile_new_post
-        appbar("Настройка")
-        page.update()
-
     def new_post_page(e):
         page.clean()
         page.navigation_bar = nav_main_search_profile_new_post
         page.appbar = None
+        page.update()
+
+    def show_settings_page(e):
+        page.clean()
+        page.navigation_bar = nav_main_search_profile_new_post
+        appbar("Настройка")
         page.update()
 
     def show_main_page(e):
@@ -44,7 +46,7 @@ def main(page: Page):
     def show_search_page(e):
         page.clean()
         page.appbar = None
-        page.add(name_input, lv, data_not_found)
+        page.add(controlc=[name_input, lv, data_not_found])
         page.navigation_bar = nav_main_search_profile_new_post
         page.update()
 
@@ -183,6 +185,42 @@ def main(page: Page):
             page.update()
         page.update()
 
+    def reg_auth_panel(text, btn_reg_auth):
+        page.add(
+            Row(
+                controls=[
+                    Column(
+                        controls=[
+                            Text(
+                                value=text,
+                                size=20,
+                            ),
+                            user_name,
+                            user_password,
+                            btn_reg_auth,
+                        ],
+                        horizontal_alignment=CrossAxisAlignment.CENTER, spacing=20
+                    )
+                ],
+                alignment=MainAxisAlignment.CENTER))
+
+    def appbar(text):
+        page.appbar = AppBar(
+            leading=Container(
+                Row([
+                    IconButton(
+                        icons.ARROW_BACK_IOS,
+                        on_click=show_profile_page
+                    ),
+                    Text(
+                        value=text,
+                    )
+                ], spacing=-4)
+            ),
+            bgcolor=colors.BLACK,
+            color="white"
+        )
+
     user_name = TextField(
         label="Имя пользователя",
         border_color="white",
@@ -218,25 +256,6 @@ def main(page: Page):
         height=50,
         style=ButtonStyle(shape=RoundedRectangleBorder(radius=10))
     )
-
-    def reg_auth_panel(text, btn_reg_auth):
-        page.add(
-            Row(
-                controls=[
-                    Column(
-                        controls=[
-                            Text(
-                                value=text,
-                                size=20,
-                            ),
-                            user_name,
-                            user_password,
-                            btn_reg_auth,
-                        ],
-                        horizontal_alignment=CrossAxisAlignment.CENTER, spacing=20
-                    )
-                ],
-                alignment=MainAxisAlignment.CENTER))
 
     nav_reg_auth = NavigationBar(
         destinations=[
@@ -339,23 +358,6 @@ def main(page: Page):
                 IconButton(icons.FAVORITE_BORDER_OUTLINED, on_click=show_notification_page),
                 IconButton(icons.CHAT_ROUNDED, on_click=show_chat_page)
             ],
-            color="white"
-        )
-
-    def appbar(text):
-        page.appbar = AppBar(
-            leading=Container(
-                Row([
-                    IconButton(
-                        icons.ARROW_BACK_IOS,
-                        on_click=show_profile_page
-                    ),
-                    Text(
-                        value=text,
-                    )
-                ], spacing=-4)
-            ),
-            bgcolor=colors.BLACK,
             color="white"
         )
 
