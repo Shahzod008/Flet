@@ -1,6 +1,6 @@
-from flet import (Page, Column, Row, Container, TextButton, ElevatedButton, colors, Text, MainAxisAlignment,
-                  ButtonStyle, icons, SnackBar, MaterialState, RoundedRectangleBorder, IconButton, CrossAxisAlignment,
-                  AppBar, TextField, NavigationBar, NavigationDestination, alignment, ListView, CircleAvatar, app)
+from flet import (app, SnackBar, Column, CrossAxisAlignment, MainAxisAlignment, Text, TextButton, colors, icons, Page,
+                  ButtonStyle, NavigationBar, NavigationDestination, AppBar, Row, Container,  MaterialState,
+                  RoundedRectangleBorder, TextField, ElevatedButton, alignment, IconButton, CircleAvatar, ListView)
 from sqlite3 import connect
 
 
@@ -46,7 +46,7 @@ def main(page: Page):
     def show_search_page(e):
         page.clean()
         page.appbar = None
-        page.add(controlc=[name_input, lv, data_not_found])
+        page.add(name_input, lv, data_not_found)
         page.navigation_bar = nav_main_search_profile_new_post
         page.update()
 
